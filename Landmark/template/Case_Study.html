@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %} Case Study {% endblock %}</title>
+
+    <!--    Bootstrap, js link-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
+
+
+</head>
+<body>
+
+<!--Nav Bar-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand col-mx-6 mx-auto" style="">Landmark CaseStudy</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+</nav>
+<!--End of nav-->
+
+<!--For the Messages alert-->
+{% if messages %}
+{% for message in messages %}
+<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+
+    {{ message }}
+    {% endfor %}
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+{% endif %}
+<!--end of Messages alert-->
+
+<div class="container">
+
+<form method="POST" action="{% url 'case_study'%}" class="mx-5" id="casestudy" id-of-territory-url="{% url 'load_item_id' %}" >
+    {% csrf_token %}
+<div class="row mx-5">
+<!--    <div class="col-xl-4 col-md-6 mb-4">-->
+    <div class="col-xl-6 col-md-6  col-mx-4 mx-auto">
+         <label for="territory">Select Territory</label>
+      <select class="form-control dropdown" id="territory" name="tritry">
+        <option selected disabled="true" value="0">--Select territory--</option>
+        {% for territory in territory_list %}
+          <option value="{{territory}}">{{territory}}</option>
+          {% endfor %}
+      </select>
+    </div>
+
+<!--    <div class="col-xl-4 col-md-6 mb-4">-->
+    <div class="col-xl-6 col-md-6 col-mx-4 mx-auto">
+         <label for="item_id">Select Item ID</label>
+      <select class="form-control dropdown" id="item_id" name="territary_id">
+        <option selected disabled="true" value="0">--Select Item ID--</option>
+      </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary col-sm-6 mx-auto" id="submit-btn">Submit</button>
+    <br>
+</div>
+</form>
+
+<!--    Ajax Request-->
+     <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script>
+    $("#territory").change(function () {
+      var url = $("#casestudy").attr("id-of-territory-url");
+      var territory_name = $(this).val();
+
+      $.ajax({
+        url: url,
+        data: {
+          'territory_name': territory_name
+        },
+        success: function (data) {
+          $("#item_id").html(data);
+        }
+      });
+
+    });
+
+<!--To disable button-->
+    $(document).ready(function() {
+
+    $("#submit-btn").prop('disabled',true);
+
+    $('.dropdown').change(function() {
+        if ($('#territory').val() == 0) {
+          $("#submit-btn").prop('disabled',true);
+        } else {
+          $("#submit-btn").prop('disabled',false);
+        }
+    });
+
+});
+
+  </script>
+
+<hr>
+<!--Here Overall Stock and Total Stock-->
+<div class="row ">
+<!--    Here First Block-->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Overall Stock</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{overall_stock}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    End of First Block-->
+
+<!--    Total Stock-->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">Total Stock</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{territory_wise_overall_stock}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--    End of Total Block-->
+<!--    WareHose Block-->
+    <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Warehouse Stock</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{warehouse_stock}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- End of WareHose Block-->
+
+<!--    Store Block-->
+     <div class="col-xl-3 col-md-6 mb-4">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Store Stock</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">{{store_stock}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End of Store block-->
+
+    <!--    price value Block-->
+     <div class="col-xl-3 col-md-6 mb-4 col-sm-6 mx-auto">
+        <div class="card border-left-primary shadow h-100">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Price Value</div>
+                        <div class="h5 mb-0 font-weight-bold text-gray-800">Rs. {{price_value}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!--End of price value block-->
+
+
+</div>
+
+<!--Here Container-->
+    </div>
+</body>
+</html>
