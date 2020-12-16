@@ -26,26 +26,11 @@
 </nav>
 <!--End of nav-->
 
-<!--For the Messages alert-->
-{% if messages %}
-{% for message in messages %}
-<div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
-
-    {{ message }}
-    {% endfor %}
-  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-    <span aria-hidden="true">&times;</span>
-  </button>
-</div>
-{% endif %}
-<!--end of Messages alert-->
-
 <div class="container">
 
-<form method="POST" action="{% url 'case_study'%}" class="mx-5" id="casestudy" id-of-territory-url="{% url 'load_item_id' %}" >
+<form method="POST" action="{% url 'case_study'%}" class="mx-5" id="casestudy" id-of-territory-url="{% url 'load_territory_id' %}" >
     {% csrf_token %}
 <div class="row mx-5">
-<!--    <div class="col-xl-4 col-md-6 mb-4">-->
     <div class="col-xl-6 col-md-6  col-mx-4 mx-auto">
          <label for="territory">Select Territory</label>
       <select class="form-control dropdown" id="territory" name="tritry">
@@ -56,7 +41,6 @@
       </select>
     </div>
 
-<!--    <div class="col-xl-4 col-md-6 mb-4">-->
     <div class="col-xl-6 col-md-6 col-mx-4 mx-auto">
          <label for="item_id">Select Item ID</label>
       <select class="form-control dropdown" id="item_id" name="territary_id">
@@ -106,6 +90,7 @@
   </script>
 
 <hr>
+
 <!--Here Overall Stock and Total Stock-->
 <div class="row ">
 <!--    Here First Block-->
@@ -181,7 +166,6 @@
         </div>
     </div>
 <!--End of price value block-->
-
 
 </div>
 

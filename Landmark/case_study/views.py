@@ -2,11 +2,7 @@ from django.shortcuts import render
 from django.db.models import Q
 from django.db.models import Sum
 from django.views import View
-
 from .models import CaseStudy
-# Create your views here.
-from django.contrib import messages
-
 
 class Case_study(View):
     context = {}
@@ -32,7 +28,6 @@ class Case_study(View):
                 warehouse_stock = '--'
                 store_stock = '--'
                 price_value = '--'
-                messages.warning(request, "Please select Territory")
 
             else:
                 territory_wise_total_stock = CaseStudy.objects.filter(Q(territory=selected_territory) & Q(item_id=selected_territory_id)).aggregate(
@@ -54,7 +49,7 @@ class Case_study(View):
         return render(request, 'Case_Study.html', self.context)
 
 
-def load_item_id(request):
+def load_territory_id(request):
     territory_name = request.GET.get('territory_name')
-    item_id = CaseStudy.objects.filter(territory = territory_name)
-    return render(request, 'case_id_dropdown.html', {'item_id': item_id})
+    territory_id = CaseStudy.objects.filter(territory = territory_name)
+    return render(request, 'case_id_dropdown.html', {'territory_id': territory_id})
